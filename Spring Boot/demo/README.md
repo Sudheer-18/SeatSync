@@ -10,6 +10,8 @@ Spring Boot 4 / Java 21 REST API. It uses the existing MySQL connection, Hiberna
 4. From this directory, in that same terminal, run `.\mvnw.cmd test`, then `.\mvnw.cmd spring-boot:run`.
 5. In `D:\SeatSync\react_project`, run `npm run dev`. The frontend defaults to `http://localhost:8080`; set `VITE_API_URL` to override it.
 
+For the Render backend, set `CORS_ALLOWED_ORIGINS` to `https://reactproject-rho-nine.vercel.app` (and any local origins you need, comma-separated). A Render environment variable overrides the default in `application.properties`; redeploy the backend after changing it.
+
 ## Deploy with Docker Compose
 
 The repository root contains a Compose deployment for MySQL, the API, and the React frontend. In PowerShell, from the repository root, copy `.env.example` to `.env`, edit it, and replace every example secret with unique random values and the actual production URLs:
