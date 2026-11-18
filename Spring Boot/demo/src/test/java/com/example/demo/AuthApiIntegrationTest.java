@@ -15,7 +15,9 @@ import tools.jackson.databind.ObjectMapper;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -58,5 +60,16 @@ class AuthApiIntegrationTest {
             .andExpect(status().isOk());
         http.perform(get("/auth/me")).andExpect(status().isUnauthorized());
         http.perform(get("/health")).andExpect(status().isOk());
+    }
+
+    @Test
+    void allowsDeployedFrontendCorsPreflightEvenWhenConfiguredOriginsAreLocalOnly() throws Exception {
+        String origin = "https://reactproject-rho-nine.vercel.app";
+        http.perform(options("/auth/register")
+                .header("Origin", origin)
+                .header("Access-Control-Request-Method", "POST")
+                .header("Access-Control-Request-Headers", "content-type"))
+            .andExpect(status().isOk())
+            .andExpect(header().string("Access-Control-Allow-Origin", origin));
     }
 }

@@ -2,6 +2,7 @@ package com.example.demo.config;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 import com.example.demo.security.ApiSecurityErrorWriter;
 import com.example.demo.security.JwtAuthFilter;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 public class SecurityConfig {
+    private static final String DEPLOYED_FRONTEND_ORIGIN = "https://reactproject-rho-nine.vercel.app";
+
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -63,7 +66,10 @@ public class SecurityConfig {
         @Value("${seatsync.cors.allowed-origins}") String origins
     ) {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.stream(origins.split(",")).map(String::trim).toList());
+        config.setAllowedOrigins(Stream.concat(
+            Arrays.stream(origins.split(",")).map(String::trim).filter(origin -> !origin.isEmpty()),
+            Stream.of(DEPLOYED_FRONTEND_ORIGIN)
+        ).distinct().toList());
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Idempotency-Key"));
         config.setAllowCredentials(true);
