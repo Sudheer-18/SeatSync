@@ -1,6 +1,6 @@
 export const TOKEN_STORAGE_KEY = 'seatsync_token'
 
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+export const API_URL = import.meta.env.VITE_API_URL || 'https://seatsync-392b.onrender.com'
 
 export const BUS_TYPES = [
   { value: 'AC_SLEEPER', label: 'AC Sleeper' },
