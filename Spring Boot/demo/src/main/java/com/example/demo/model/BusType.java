@@ -1,0 +1,12 @@
+package com.example.demo.model;
+
+public enum BusType {
+    AC_SLEEPER,
+    AC_SEATER,
+    NON_AC_SLEEPER,
+    NON_AC_SEATER;
+
+    public String seatType() {
+        return name().endsWith("SLEEPER") ? "SLEEPER" : "SEATER";
+    }
+}

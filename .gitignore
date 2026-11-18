@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+
+# Frontend
+react_project/node_modules/
+react_project/dist/
+
+# Backend
+Spring Boot/demo/target/
+Spring Boot/demo/.env
+Spring Boot/demo/.env.*
+!Spring Boot/demo/.env.example
