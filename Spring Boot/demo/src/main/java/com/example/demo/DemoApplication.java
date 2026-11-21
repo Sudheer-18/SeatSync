@@ -6,6 +6,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
 @SpringBootApplication
 @EnableScheduling
 public class DemoApplication {
@@ -38,6 +43,34 @@ public class DemoApplication {
             }
         }
 
+        startContinuousApiCalls();
         SpringApplication.run(DemoApplication.class, args);
+    }
+
+    private static void startContinuousApiCalls() {
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://jsonplaceholder.typicode.com/users"))
+                .GET()
+                .build();
+
+        Thread.startVirtualThread(() -> {
+            while (true) {
+                try {
+                    httpClient.send(request, HttpResponse.BodyHandlers.discarding());
+                    Thread.sleep(1000);
+                } catch (InterruptedException interruptedException) {
+                    Thread.currentThread().interrupt();
+                    break;
+                } catch (Exception exception) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException interruptedException) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
+                }
+            }
+        });
     }
 }
